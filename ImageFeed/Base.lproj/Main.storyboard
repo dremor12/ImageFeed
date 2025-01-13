@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,19 +16,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="sYD-y2-bhE">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="OQ7-oP-4aa">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <color key="backgroundColor" name="YP Background (iOS)"/>
+                                <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="0.0" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="10" reuseIdentifier="ImagesListCell" rowHeight="224" id="oDP-qF-JJv" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="10" reuseIdentifier="ImagesListCell" rowHeight="224" id="AG3-iA-guJ" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="224"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oDP-qF-JJv" id="Wo3-JE-Ond">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="AG3-iA-guJ" id="5Q4-eY-Ysj">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="224"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="PIY-cv-fmp" userLabel="Cell Image">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="msc-op-NxO" userLabel="Cell Image">
                                                     <rect key="frame" x="16" y="4" width="382" height="216"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="16"/>
@@ -37,77 +37,69 @@
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="biK-8E-jHB" userLabel="Data Label">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="am0-m8-Vg5" userLabel="Like Button">
+                                                    <rect key="frame" x="354" y="4" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="DNn-4E-lYR"/>
+                                                        <constraint firstAttribute="width" constant="44" id="sTI-ee-Tls"/>
+                                                    </constraints>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" image="favorites_active"/>
+                                                </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8j-ve-KcY" userLabel="Data Label">
                                                     <rect key="frame" x="24" y="196" width="101.5" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZT0-xC-Oh0" userLabel="Like Button">
-                                                    <rect key="frame" x="354" y="4" width="44" height="44"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="44" id="6H0-3m-OpK"/>
-                                                        <constraint firstAttribute="height" constant="44" id="LA0-Ue-Zsc"/>
-                                                    </constraints>
-                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                    <state key="normal" image="FavoritesActive">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </state>
-                                                </button>
                                             </subviews>
-                                            <color key="backgroundColor" name="YP Background (iOS)"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstItem="ZT0-xC-Oh0" firstAttribute="top" secondItem="PIY-cv-fmp" secondAttribute="top" id="1gS-gK-rxp"/>
-                                                <constraint firstItem="PIY-cv-fmp" firstAttribute="leading" secondItem="Wo3-JE-Ond" secondAttribute="leading" constant="16" id="Ao7-Pg-b60"/>
-                                                <constraint firstItem="biK-8E-jHB" firstAttribute="leading" secondItem="PIY-cv-fmp" secondAttribute="leading" constant="8" id="Auv-bY-k6U"/>
-                                                <constraint firstItem="PIY-cv-fmp" firstAttribute="top" secondItem="Wo3-JE-Ond" secondAttribute="top" constant="4" id="Mzt-xH-tuD"/>
-                                                <constraint firstItem="PIY-cv-fmp" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="biK-8E-jHB" secondAttribute="trailing" constant="8" id="XfH-7J-s4f"/>
-                                                <constraint firstAttribute="bottom" secondItem="PIY-cv-fmp" secondAttribute="bottom" constant="4" id="Z6l-IB-Wcc"/>
-                                                <constraint firstItem="PIY-cv-fmp" firstAttribute="trailing" secondItem="ZT0-xC-Oh0" secondAttribute="trailing" id="mih-a1-Gyi"/>
-                                                <constraint firstAttribute="trailing" secondItem="PIY-cv-fmp" secondAttribute="trailing" constant="16" id="qiY-In-FbJ"/>
-                                                <constraint firstItem="PIY-cv-fmp" firstAttribute="bottom" secondItem="biK-8E-jHB" secondAttribute="bottom" constant="8" id="zb5-jG-Tux"/>
+                                                <constraint firstItem="msc-op-NxO" firstAttribute="leading" secondItem="5Q4-eY-Ysj" secondAttribute="leading" constant="16" id="5Qi-v5-Doj"/>
+                                                <constraint firstItem="r8j-ve-KcY" firstAttribute="leading" secondItem="msc-op-NxO" secondAttribute="leading" constant="8" id="5cA-k3-kqM"/>
+                                                <constraint firstItem="am0-m8-Vg5" firstAttribute="top" secondItem="msc-op-NxO" secondAttribute="top" id="B9o-pb-Mtq"/>
+                                                <constraint firstItem="msc-op-NxO" firstAttribute="trailing" secondItem="am0-m8-Vg5" secondAttribute="trailing" id="CT4-Ti-7G8"/>
+                                                <constraint firstAttribute="bottom" secondItem="msc-op-NxO" secondAttribute="bottom" constant="4" id="HB4-PH-fy0"/>
+                                                <constraint firstAttribute="trailing" secondItem="msc-op-NxO" secondAttribute="trailing" constant="16" id="O5Y-Ka-n2S"/>
+                                                <constraint firstItem="msc-op-NxO" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="r8j-ve-KcY" secondAttribute="trailing" constant="8" id="PBe-Fi-xKh"/>
+                                                <constraint firstItem="msc-op-NxO" firstAttribute="bottom" secondItem="r8j-ve-KcY" secondAttribute="bottom" constant="8" id="PGA-tc-dLK"/>
+                                                <constraint firstItem="msc-op-NxO" firstAttribute="top" secondItem="5Q4-eY-Ysj" secondAttribute="top" constant="4" id="gTK-Gc-ikw"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" name="YP Background (iOS)"/>
+                                        <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="0.0" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="cellImage" destination="PIY-cv-fmp" id="Vgo-ym-2AK"/>
-                                            <outlet property="dataLabel" destination="biK-8E-jHB" id="7dC-oF-lhw"/>
-                                            <outlet property="likeButton" destination="ZT0-xC-Oh0" id="8HE-kU-gPD"/>
+                                            <outlet property="cellImage" destination="msc-op-NxO" id="SNd-wi-Y4f"/>
+                                            <outlet property="dateLabel" destination="r8j-ve-KcY" id="Fsr-TJ-Aaw"/>
+                                            <outlet property="likeButton" destination="am0-m8-Vg5" id="xvP-OV-fhh"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
-                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="dxJ-iC-54H"/>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="G3Q-Ay-XTC"/>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="vbZ-lm-bRq"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="TH9-Yn-dH6"/>
                                 </connections>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" name="YP Black (iOS)"/>
+                        <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="sYD-y2-bhE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="PrS-z8-2p1"/>
-                            <constraint firstAttribute="top" secondItem="sYD-y2-bhE" secondAttribute="top" id="Xlv-tg-dDN"/>
-                            <constraint firstAttribute="trailing" secondItem="sYD-y2-bhE" secondAttribute="trailing" id="cyX-Df-6s1"/>
-                            <constraint firstItem="sYD-y2-bhE" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="hPh-DE-Kcm"/>
+                            <constraint firstAttribute="trailing" secondItem="OQ7-oP-4aa" secondAttribute="trailing" id="3VG-g3-X8f"/>
+                            <constraint firstItem="OQ7-oP-4aa" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="D7S-kc-dUv"/>
+                            <constraint firstAttribute="top" secondItem="OQ7-oP-4aa" secondAttribute="top" id="rT5-Xi-LXN"/>
+                            <constraint firstItem="OQ7-oP-4aa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="vdz-cY-672"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="tableView" destination="sYD-y2-bhE" id="pOR-h6-p3c"/>
+                        <outlet property="tableView" destination="OQ7-oP-4aa" id="exZ-ZH-tbe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="130.53435114503816" y="-27.464788732394368"/>
+            <point key="canvasLocation" x="134.78260869565219" y="4.6875"/>
         </scene>
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
-        <image name="FavoritesActive" width="42" height="42"/>
-        <namedColor name="YP Background (iOS)">
-            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="YP Black (iOS)">
-            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
+        <image name="favorites_active" width="42" height="42"/>
     </resources>
 </document>
