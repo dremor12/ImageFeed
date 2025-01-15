@@ -10,7 +10,7 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
