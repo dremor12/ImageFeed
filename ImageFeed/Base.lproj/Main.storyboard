@@ -197,8 +197,8 @@
                         </tabBarAppearance>
                     </tabBar>
                     <connections>
-                        <segue destination="csP-7f-jy2" kind="relationship" relationship="viewControllers" id="bIB-Nx-idX"/>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="IVL-XW-DkK"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="d8u-oJ-YZZ"/>
+                        <segue destination="csP-7f-jy2" kind="relationship" relationship="viewControllers" id="we9-tC-8Ia"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="miX-7I-zkZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -219,7 +219,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q8q-Yh-wnT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="19" y="774"/>
+            <point key="canvasLocation" x="151" y="15"/>
         </scene>
     </scenes>
     <resources>
