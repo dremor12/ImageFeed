@@ -6,9 +6,7 @@ final class OAuth2Service {
     private init() {}
     
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        guard let baseURL = URL(string: "https://unsplash.com/oauth/token") else {
-            return nil
-        }
+        let baseURL = Constants.tokenURL
         
         let parameters: [String: String] = [
             "client_id": Constants.accessKey,
@@ -43,21 +41,17 @@ final class OAuth2Service {
             case .success(let data):
                 do {
                     let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    
                     self?.tokenStorage.token = responseBody.accessToken
-                    
                     completion(.success(responseBody.accessToken))
                 } catch {
                     print("Ошибка декодирования JSON: \(error.localizedDescription)")
                     completion(.failure(error))
                 }
-                
             case .failure(let error):
                 print("Сетевая ошибка: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
-        
         task.resume()
     }
 }

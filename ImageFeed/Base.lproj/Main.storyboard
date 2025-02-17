@@ -19,14 +19,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcq-zG-xE1">
-                                <rect key="frame" x="16" y="680" width="361" height="48"/>
+                                <rect key="frame" x="16" y="714" width="361" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="Thq-4E-oEs"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <color key="tintColor" name="YP Black"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Войти"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Войти"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="16"/>
@@ -51,7 +52,7 @@
                             <constraint firstItem="qPa-EY-S9a" firstAttribute="centerY" secondItem="HeL-Ha-aAc" secondAttribute="centerY" id="7z5-21-h3M"/>
                             <constraint firstItem="mcq-zG-xE1" firstAttribute="centerX" secondItem="HeL-Ha-aAc" secondAttribute="centerX" id="MfQ-sP-fXf"/>
                             <constraint firstItem="qPa-EY-S9a" firstAttribute="centerX" secondItem="HeL-Ha-aAc" secondAttribute="centerX" id="VUx-gG-v06"/>
-                            <constraint firstItem="gNy-Pj-chY" firstAttribute="bottom" secondItem="mcq-zG-xE1" secondAttribute="bottom" constant="124" id="Xld-WP-yVw"/>
+                            <constraint firstItem="gNy-Pj-chY" firstAttribute="bottom" secondItem="mcq-zG-xE1" secondAttribute="bottom" constant="90" id="Xld-WP-yVw"/>
                             <constraint firstItem="gNy-Pj-chY" firstAttribute="trailing" secondItem="mcq-zG-xE1" secondAttribute="trailing" constant="16" id="dac-Xr-8Xx"/>
                             <constraint firstItem="mcq-zG-xE1" firstAttribute="leading" secondItem="gNy-Pj-chY" secondAttribute="leading" constant="16" id="olU-Si-O4m"/>
                         </constraints>

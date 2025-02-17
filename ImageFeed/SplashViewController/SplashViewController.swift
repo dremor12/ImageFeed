@@ -10,13 +10,7 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if oauth2TokenStorage.token != nil {
-            switchToTabBarController()
-        } else {
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
-        }
-        
+        checkAuthenticationStatus()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -27,6 +21,15 @@ final class SplashViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
+    
+    private func checkAuthenticationStatus() {
+        if oauth2TokenStorage.token != nil {
+            switchToTabBarController()
+        } else {
+            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+        }
+    }
+    
     
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
@@ -60,22 +63,9 @@ extension SplashViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
-    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode token: String) {
         dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.fetchOAuthToken(code)
-        }
-    }
-    
-    private func fetchOAuthToken(_ code: String) {
-        oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success:
-                self.switchToTabBarController()
-            case .failure:
-                break
-            }
+            self?.switchToTabBarController()
         }
     }
 }
