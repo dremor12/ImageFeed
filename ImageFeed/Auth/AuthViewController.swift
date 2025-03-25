@@ -60,8 +60,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
                         message: "Не удалось войти в систему",
                         preferredStyle: .alert
                     )
-                    alert.addAction(UIAlertAction(title: "Ок", style: .default))                    
-                    self?.dismiss(animated: true)
+                    alert.addAction(UIAlertAction(title: "Ок", style: .default))    
+                    self?.present(alert, animated: true, completion: nil)
                 }
             }
         }
