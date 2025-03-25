@@ -1,13 +1,7 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
-    
-    private let avatarImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "avatar"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    } ()
     
     private lazy var nameLabel: UILabel = createLabel(
         text: "Екатерина Новикова",
@@ -27,6 +21,13 @@ final class ProfileViewController: UIViewController {
         textColor: UIColor.ypWhite
     )
     
+    private let avatarImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "avatar"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    } ()
+    
     private let logoutButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -35,14 +36,29 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
+    private let profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupAvatarImageView()
         setupProfileInfo()
         setupLogoutButton()
+        updateProfileDetails(profile: profileService.profile!)
+        
+        profileImageServiceObserver = NotificationCenter
+            .default.addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
     }
-    
+
     private func createLabel(text: String, font: UIFont, textColor: UIColor) -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +67,27 @@ final class ProfileViewController: UIViewController {
         label.textColor = textColor
         return label
     }
-    
+
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else {
+            return
+        }
+
+        let processor = RoundCornerImageProcessor(cornerRadius: 61, backgroundColor: .ypBlack)
+
+        avatarImageView.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "avatar"),
+            options: [
+                .processor(processor),
+                .transition(.fade(0.3))
+            ]
+        )
+    }
+
     private func setupAvatarImageView() {
         view.addSubview(avatarImageView)
         NSLayoutConstraint.activate([
@@ -61,7 +97,7 @@ final class ProfileViewController: UIViewController {
             avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32)
         ])
     }
-    
+
     private func setupProfileInfo() {
         view.addSubview(nameLabel)
         view.addSubview(loginNameLabel)
@@ -95,8 +131,14 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        loginNameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio ?? ""
+    }
+    
     @objc
     private func didTapLogoutButton() {
-        
+        return
     }
 }

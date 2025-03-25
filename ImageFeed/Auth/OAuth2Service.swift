@@ -3,11 +3,14 @@ import UIKit
 final class OAuth2Service {
     static let shared = OAuth2Service()
     private let tokenStorage = OAuth2TokenStorage()
+    private let queue = DispatchQueue(label: "OAuth2ServiceQueue", attributes: .concurrent)
+    private var currentTask: URLSessionTask?
+
     private init() {}
-    
+
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         let baseURL = Constants.tokenURL
-        
+
         let parameters: [String: String] = [
             "client_id": Constants.accessKey,
             "client_secret": Constants.secretKey,
@@ -15,43 +18,52 @@ final class OAuth2Service {
             "code": code,
             "grant_type": "authorization_code"
         ]
-        
+
         let httpBody = parameters
             .map { key, value in "\(key)=\(value)" }
             .joined(separator: "&")
             .data(using: .utf8)
         
         var request = URLRequest(url: baseURL)
+
         request.httpMethod = "POST"
         request.httpBody = httpBody
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         
         return request
     }
-    
+
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Ошибка: невозможно создать запрос токена")
-            completion(.failure(NSError(domain: "InvalidRequest", code: 400, userInfo: nil)))
-            return
-        }
-        
-        let task = URLSession.shared.data(for: request) { [weak self] result in
-            switch result {
-            case .success(let data):
-                do {
-                    let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    self?.tokenStorage.token = responseBody.accessToken
-                    completion(.success(responseBody.accessToken))
-                } catch {
-                    print("Ошибка декодирования JSON: \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
-            case .failure(let error):
-                print("Сетевая ошибка: \(error.localizedDescription)")
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            
+            self.currentTask?.cancel()
+            
+            
+            
+            guard let request = makeOAuthTokenRequest(code: code) else {
+                let error = NSError(domain: "InvalidRequest", code: 400, userInfo: nil)
+                print("[fetchOAuthToken]: InvalidRequest - не удалось создать запрос с кодом: \(code)")
                 completion(.failure(error))
+                return
             }
+
+            let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+                guard let self = self else { return }
+                self.queue.async(flags: .barrier) {
+                    switch result {
+                    case .success(let responseBody):
+                        self.tokenStorage.token = responseBody.accessToken
+                        completion(.success(responseBody.accessToken))
+                    case .failure(let error):
+                        print("[fetchOAuthToken]: \(error.localizedDescription)")
+                        completion(.failure(error))
+                    }
+                }
+            }
+
+            self.currentTask = task
+            task.resume()
         }
-        task.resume()
     }
 }

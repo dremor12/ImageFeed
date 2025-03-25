@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode token: String)
@@ -40,15 +41,28 @@ class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        
+        UIBlockingProgressHUD.show()
+        
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            switch result {
-            case .success(let token):
-                self?.oauth2TokenStorage.token = token
-                self?.delegate?.authViewController(self!, didAuthenticateWithCode: token)
-                print("Токен успешно получен: \(token)")
-            case .failure(let error):
-                self?.dismiss(animated: true)
-                print("Ошибка авторизации: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                UIBlockingProgressHUD.dismiss()
+                
+                switch result {
+                case .success(let token):
+                    self?.oauth2TokenStorage.token = token
+                    self?.delegate?.authViewController(self!, didAuthenticateWithCode: token)
+                    print("Токен успешно получен: \(token)")
+                case .failure(let error):
+                    print("Ошибка авторизации: \(error.localizedDescription)")
+                    let alert = UIAlertController(
+                        title: "Что-то пошло не так",
+                        message: "Не удалось войти в систему",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: "Ок", style: .default))                    
+                    self?.dismiss(animated: true)
+                }
             }
         }
     }
