@@ -3,7 +3,7 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     
-    private let splashLogoImageView: UIImageView = {
+    private lazy var splashLogoImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "splash_screen"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -50,7 +50,7 @@ final class SplashViewController: UIViewController {
                 return
             }
             authViewController.delegate = self
-    
+            
             let navController = UINavigationController(rootViewController: authViewController)
             navController.modalPresentationStyle = .fullScreen
             present(navController, animated: true)
@@ -67,6 +67,16 @@ final class SplashViewController: UIViewController {
                 .instantiateViewController(withIdentifier: "TabBarViewController")
             window.rootViewController = tabBarController
         }
+    }
+    
+    func showErrorAlert(message: String) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
 
@@ -89,13 +99,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 }
                 self.switchToTabBarController()
             case .failure(let error):
-                let alert = UIAlertController(
-                    title: "Что-то пошло не так(",
-                    message: "Не удалось войти в систему\n\(error.localizedDescription)",
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
-                self.present(alert, animated: true)
+                self.showErrorAlert(message: "Не удалось войти в систему\n\(error.localizedDescription)")
             }
         }
     }

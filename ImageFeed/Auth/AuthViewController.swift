@@ -8,7 +8,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 class AuthViewController: UIViewController {
     
     private let showWebViewSegueIdentifier = "ShowWebView"
-    private let oauth2Srvice = OAuth2Service.shared
+    private let authSrvice = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
     private let oauth2TokenStorage = OAuth2TokenStorage()
     
@@ -37,6 +37,16 @@ class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = UIColor.ypBlack
     }
+    
+    func showErrorAlert(message: String) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
@@ -44,7 +54,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
         
         UIBlockingProgressHUD.show()
         
-        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
+        authSrvice.fetchOAuthToken(code) { [weak self] result in
             DispatchQueue.main.async {
                 UIBlockingProgressHUD.dismiss()
                 
@@ -55,18 +65,12 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     print("Токен успешно получен: \(token)")
                 case .failure(let error):
                     print("Ошибка авторизации: \(error.localizedDescription)")
-                    let alert = UIAlertController(
-                        title: "Что-то пошло не так",
-                        message: "Не удалось войти в систему",
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(title: "Ок", style: .default))    
-                    self?.present(alert, animated: true, completion: nil)
+                    self?.showErrorAlert(message: "Не удалось войти в систему\n\(error.localizedDescription)")
                 }
             }
         }
     }
-
+    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }

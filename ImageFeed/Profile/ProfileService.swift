@@ -4,7 +4,6 @@ final class ProfileService {
     static let shared = ProfileService()
     private init() { }
     
-    private let queue = DispatchQueue(label: "com.unsplashapi.profile", attributes: .concurrent)
     
     private(set) var profile: Profile?
     
@@ -17,7 +16,7 @@ final class ProfileService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
-
+    
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         guard let request = makeProfileRequest(with: token) else {
             let error = URLError(.badURL)
@@ -25,11 +24,11 @@ final class ProfileService {
             completion(.failure(error))
             return
         }
-
+        
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
             
-            self.queue.async(flags: .barrier) {
+            DispatchQueue.main.async {
                 switch result {
                 case .success(let profileResult):
                     let profile = Profile(profileResult: profileResult)
@@ -44,4 +43,3 @@ final class ProfileService {
         task.resume()
     }
 }
-

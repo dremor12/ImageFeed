@@ -25,6 +25,8 @@ final class ProfileViewController: UIViewController {
         let imageView = UIImageView(image: UIImage(named: "avatar"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = imageView.bounds.width / 2
         return imageView
     } ()
     
@@ -42,6 +44,8 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = UIColor.ypBlack
+        
         setupAvatarImageView()
         setupProfileInfo()
         setupLogoutButton()
@@ -58,7 +62,7 @@ final class ProfileViewController: UIViewController {
             }
         updateAvatar()
     }
-
+    
     private func createLabel(text: String, font: UIFont, textColor: UIColor) -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -67,7 +71,7 @@ final class ProfileViewController: UIViewController {
         label.textColor = textColor
         return label
     }
-
+    
     private func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
@@ -75,19 +79,16 @@ final class ProfileViewController: UIViewController {
         else {
             return
         }
-
-        let processor = RoundCornerImageProcessor(cornerRadius: 61, backgroundColor: .ypBlack)
-
+        
         avatarImageView.kf.setImage(
             with: url,
             placeholder: UIImage(named: "avatar"),
             options: [
-                .processor(processor),
                 .transition(.fade(0.3))
             ]
         )
     }
-
+    
     private func setupAvatarImageView() {
         view.addSubview(avatarImageView)
         NSLayoutConstraint.activate([
@@ -97,7 +98,7 @@ final class ProfileViewController: UIViewController {
             avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32)
         ])
     }
-
+    
     private func setupProfileInfo() {
         view.addSubview(nameLabel)
         view.addSubview(loginNameLabel)

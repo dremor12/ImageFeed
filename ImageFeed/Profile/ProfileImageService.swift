@@ -4,7 +4,7 @@ final class ProfileImageService{
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
     private init() { }
-    private let queue = DispatchQueue(label: "com.unsplashapi.profileImage", attributes: .concurrent)
+
     private (set) var avatarURL: String?
     
     private func makeImageRequest(with username: String, token: String) -> URLRequest? {
@@ -16,8 +16,8 @@ final class ProfileImageService{
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
-
-
+    
+    
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void){
         guard let token = OAuth2TokenStorage().token else {
             let error = URLError(.userAuthenticationRequired)
@@ -25,23 +25,21 @@ final class ProfileImageService{
             completion(.failure(error))
             return
         }
-
+        
         guard let request = makeImageRequest(with: username, token: token) else {
             let error = URLError(.badURL)
             print("[fetchProfileImageURL]: URLError - неверный URL для пользователя: \(username)")
             completion(.failure(error))
             return
         }
-
+        
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             guard let self = self else { return }
-
+            
             switch result {
             case .success(let userResult):
                 let imageURL = userResult.profileImage.small
-                self.queue.async(flags: .barrier) {
-                    self.avatarURL = imageURL
-                }
+                self.avatarURL = imageURL
                 completion(.success(imageURL))
                 NotificationCenter.default.post(
                     name: ProfileImageService.didChangeNotification,
