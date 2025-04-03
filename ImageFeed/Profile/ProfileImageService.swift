@@ -5,7 +5,7 @@ final class ProfileImageService{
     static let shared = ProfileImageService()
     private init() { }
 
-    private (set) var avatarURL: String?
+    private(set) var avatarURL: String?
     
     private func makeImageRequest(with username: String, token: String) -> URLRequest? {
         guard let url = URL(string: "/users/" + username, relativeTo: Constants.defaultBaseURL) else {

@@ -99,7 +99,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 }
                 self.switchToTabBarController()
             case .failure(let error):
-                self.showErrorAlert(message: "Не удалось войти в систему\n\(error.localizedDescription)")
+                self.showErrorAlert(message: "Не удалось войти в систему")
             }
         }
     }

@@ -30,7 +30,7 @@ final class OAuth2Service {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
-        
+
         let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
             DispatchQueue.main.async {
                 if let error = error {
@@ -63,9 +63,11 @@ final class OAuth2Service {
             assertionFailure("[OAuth2Service]: URL Error - Invalid URL")
             return nil
         }
+        
+        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let bodyParams: [String: String] = [
             "client_id": Constants.accessKey,
@@ -83,5 +85,4 @@ final class OAuth2Service {
         }
         return request
     }
-    
 }

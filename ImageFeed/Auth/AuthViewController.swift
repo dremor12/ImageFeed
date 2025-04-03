@@ -40,7 +40,7 @@ class AuthViewController: UIViewController {
     
     func showErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: "Что-то пошло не так",
+            title: "Что-то пошло не так(",
             message: message,
             preferredStyle: .alert
         )
@@ -65,7 +65,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     print("Токен успешно получен: \(token)")
                 case .failure(let error):
                     print("Ошибка авторизации: \(error.localizedDescription)")
-                    self?.showErrorAlert(message: "Не удалось войти в систему\n\(error.localizedDescription)")
+                    self?.showErrorAlert(message: "Не удалось войти в систему")
                 }
             }
         }
