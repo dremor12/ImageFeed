@@ -1,14 +1,75 @@
 import UIKit
 
+enum AuthServiceError: Error {
+    case invalidRequest
+}
+
 final class OAuth2Service {
     static let shared = OAuth2Service()
     private let tokenStorage = OAuth2TokenStorage()
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
     private init() {}
     
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        let baseURL = Constants.tokenURL
+    func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
         
-        let parameters: [String: String] = [
+        guard lastCode != code else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        
+        task?.cancel()
+        lastCode = code
+        
+        guard
+            let request = makeOAuthTokenRequest(code: code)
+        else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+
+        let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                } else if let data = data {
+                    do {
+                        let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                        self?.tokenStorage.token = responseBody.accessToken
+                        completion(.success(responseBody.accessToken))
+                    } catch {
+                        assertionFailure("Ошибка декодирования JSON: \(error.localizedDescription)")
+                        completion(.failure(error))
+                    }
+                } else {
+                    completion(.failure(AuthServiceError.invalidRequest))
+                }
+                
+                self?.task = nil
+                self?.lastCode = nil
+            }
+        }
+        self.task = task
+        task.resume()
+    }
+    
+    
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
+        let baseURL = Constants.tokenURL
+        guard let url = URL(string: "\(baseURL)?code=\(code)") else {
+            assertionFailure("[OAuth2Service]: URL Error - Invalid URL")
+            return nil
+        }
+        
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let bodyParams: [String: String] = [
             "client_id": Constants.accessKey,
             "client_secret": Constants.secretKey,
             "redirect_uri": Constants.redirectURI,
@@ -16,42 +77,12 @@ final class OAuth2Service {
             "grant_type": "authorization_code"
         ]
         
-        let httpBody = parameters
-            .map { key, value in "\(key)=\(value)" }
-            .joined(separator: "&")
-            .data(using: .utf8)
-        
-        var request = URLRequest(url: baseURL)
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: bodyParams, options: [])
+        } catch {
+            assertionFailure("[OAuth2Service]: JSONSerialization Error - \(error.localizedDescription)")
+            return nil
+        }
         return request
-    }
-    
-    func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Ошибка: невозможно создать запрос токена")
-            completion(.failure(NSError(domain: "InvalidRequest", code: 400, userInfo: nil)))
-            return
-        }
-        
-        let task = URLSession.shared.data(for: request) { [weak self] result in
-            switch result {
-            case .success(let data):
-                do {
-                    let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    self?.tokenStorage.token = responseBody.accessToken
-                    completion(.success(responseBody.accessToken))
-                } catch {
-                    print("Ошибка декодирования JSON: \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
-            case .failure(let error):
-                print("Сетевая ошибка: \(error.localizedDescription)")
-                completion(.failure(error))
-            }
-        }
-        task.resume()
     }
 }
