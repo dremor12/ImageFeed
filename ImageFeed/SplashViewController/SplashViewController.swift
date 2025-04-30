@@ -98,7 +98,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                     ProfileImageService.shared.fetchProfileImageURL(username: username) { _ in }
                 }
                 self.switchToTabBarController()
-            case .failure(let error):
+            case .failure:
                 self.showErrorAlert(message: "Не удалось войти в систему")
             }
         }

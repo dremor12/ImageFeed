@@ -40,6 +40,7 @@ final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var animationLayers = Set<CALayer>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,9 +61,10 @@ final class ProfileViewController: UIViewController {
                 guard let self = self else { return }
                 self.updateAvatar()
             }
+        addAnimation()
         updateAvatar()
     }
-    
+
     private func createLabel(text: String, font: UIFont, textColor: UIColor) -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -87,6 +89,8 @@ final class ProfileViewController: UIViewController {
                 .transition(.fade(0.3))
             ]
         )
+        
+        removeAnimation()
     }
     
     private func setupAvatarImageView() {
@@ -136,10 +140,71 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = profile.name
         loginNameLabel.text = profile.loginName
         descriptionLabel.text = profile.bio ?? ""
+        
+        removeAnimation()
     }
     
     @objc
     private func didTapLogoutButton() {
-        return
+        let alert = UIAlertController(
+            title: "Пока-пока!",
+            message: "Вы уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Нет", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Да", style: .destructive) { _ in
+            ProfileLogoutService.shared.logout()
+        })
+        present(alert, animated: true)
+    }
+    
+    private func addAnimation() {
+        func makeGradient(for view: UIView,
+                          cornerRadius: CGFloat = 0) -> CAGradientLayer {
+            
+            let gradient = CAGradientLayer()
+            gradient.frame = view.bounds
+            gradient.colors = [
+                UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+                UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+                UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+            ]
+            gradient.locations    = [0, 0.1, 0.3]
+            gradient.startPoint   = CGPoint(x: 0, y: 0.5)
+            gradient.endPoint     = CGPoint(x: 1, y: 0.5)
+            gradient.cornerRadius = cornerRadius
+            gradient.masksToBounds = true
+            
+            let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+            gradientChangeAnimation.fromValue     = [0, 0.1, 0.3]
+            gradientChangeAnimation.toValue       = [0, 0.8, 1]
+            gradientChangeAnimation.duration      = 1.0
+            gradientChangeAnimation.repeatCount   = .infinity
+            gradient.add(gradientChangeAnimation, forKey: "shimmer")
+            
+            return gradient
+        }
+        
+        let avatarGradient = makeGradient(for: avatarImageView,
+                                          cornerRadius: avatarImageView.bounds.width / 2)
+        avatarImageView.layer.addSublayer(avatarGradient)
+        animationLayers.insert(avatarGradient)
+        
+        let nameGradient = makeGradient(for: nameLabel)
+        nameLabel.layer.addSublayer(nameGradient)
+        animationLayers.insert(nameGradient)
+        
+        let loginGradient = makeGradient(for: loginNameLabel)
+        loginNameLabel.layer.addSublayer(loginGradient)
+        animationLayers.insert(loginGradient)
+        
+        let descGradient = makeGradient(for: descriptionLabel)
+        descriptionLabel.layer.addSublayer(descGradient)
+        animationLayers.insert(descGradient)
+    }
+    
+    private func removeAnimation() {
+        animationLayers.forEach { $0.removeFromSuperlayer() }
+        animationLayers.removeAll()
     }
 }
