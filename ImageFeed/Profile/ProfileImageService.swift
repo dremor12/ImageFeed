@@ -4,7 +4,7 @@ final class ProfileImageService{
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
     private init() { }
-
+    
     private(set) var avatarURL: String?
     
     private func makeImageRequest(with username: String, token: String) -> URLRequest? {
@@ -52,5 +52,9 @@ final class ProfileImageService{
             }
         }
         task.resume()
+    }
+    
+    func reset() {
+        avatarURL = nil
     }
 }
