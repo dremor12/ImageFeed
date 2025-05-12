@@ -22,7 +22,7 @@ final class ProfileLogoutService {
     }
     
     private func resetServices() {
-        OAuth2TokenStorage().token = nil
+        OAuth2TokenStorage.shared.token = nil
         ProfileService.shared.reset()
         ProfileImageService.shared.reset()
         ImagesListService.shared.reset()

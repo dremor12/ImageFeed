@@ -10,7 +10,7 @@ class AuthViewController: UIViewController {
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let authSrvice = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
-    private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let oauth2TokenStorage = OAuth2TokenStorage.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,17 +55,18 @@ extension AuthViewController: WebViewViewControllerDelegate {
         UIBlockingProgressHUD.show()
         
         authSrvice.fetchOAuthToken(code) { [weak self] result in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 UIBlockingProgressHUD.dismiss()
                 
                 switch result {
                 case .success(let token):
-                    self?.oauth2TokenStorage.token = token
-                    self?.delegate?.authViewController(self!, didAuthenticateWithCode: token)
+                    self.oauth2TokenStorage.token = token
+                    self.delegate?.authViewController(self, didAuthenticateWithCode: token)
                     print("Токен успешно получен: \(token)")
                 case .failure(let error):
                     print("Ошибка авторизации: \(error.localizedDescription)")
-                    self?.showErrorAlert(message: "Не удалось войти в систему")
+                    self.showErrorAlert(message: "Не удалось войти в систему")
                 }
             }
         }

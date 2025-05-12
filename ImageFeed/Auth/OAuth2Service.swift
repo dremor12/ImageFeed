@@ -6,7 +6,7 @@ enum AuthServiceError: Error {
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastCode: String?
@@ -59,6 +59,7 @@ final class OAuth2Service {
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         let baseURL = Constants.tokenURL
+
         guard let url = URL(string: "\(baseURL)?code=\(code)") else {
             assertionFailure("[OAuth2Service]: URL Error - Invalid URL")
             return nil

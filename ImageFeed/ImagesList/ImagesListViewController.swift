@@ -145,12 +145,15 @@ extension ImagesListViewController: ImagesListCellDelegate {
        let photo = photos[indexPath.row]
         
         UIBlockingProgressHUD.show()
-        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success:
                 self.photos = self.imagesListService.photos
                 cell.setIsLiked(self.photos[indexPath.row].isLiked)
                 UIBlockingProgressHUD.dismiss()
+                
             case .failure:
                 UIBlockingProgressHUD.dismiss()
                 let alert = UIAlertController(
@@ -158,8 +161,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
                     message: "Попробуйте ещё раз позже",
                     preferredStyle: .alert
                 )
-                let action = UIAlertAction(title: "OK", style: .default)
-                alert.addAction(action)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
                 self.present(alert, animated: true)
             }
         }

@@ -11,7 +11,7 @@ struct Photo {
     let isLiked: Bool
 }
 
-struct LikeResponse: Codable {
+struct LikeResponse: Decodable {
     let photo: PhotoResult
 }
 

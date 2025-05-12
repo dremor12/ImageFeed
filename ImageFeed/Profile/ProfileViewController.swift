@@ -50,7 +50,12 @@ final class ProfileViewController: UIViewController {
         setupAvatarImageView()
         setupProfileInfo()
         setupLogoutButton()
-        updateProfileDetails(profile: profileService.profile!)
+        
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
+        } else {
+            addAnimation()
+        }
         
         profileImageServiceObserver = NotificationCenter
             .default.addObserver(
@@ -61,7 +66,6 @@ final class ProfileViewController: UIViewController {
                 guard let self = self else { return }
                 self.updateAvatar()
             }
-        addAnimation()
         updateAvatar()
     }
 

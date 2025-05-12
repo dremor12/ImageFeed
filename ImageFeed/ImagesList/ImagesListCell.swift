@@ -10,6 +10,11 @@ final class ImagesListCell: UITableViewCell {
     weak var delegate: ImagesListCellDelegate?
     private var animationLayer: CAGradientLayer?
     
+    private enum Constants {
+        static let likeActiveImage = "favorites_active"
+        static let likeInactiveImage = "favorites_no_active"
+    }
+    
     @IBOutlet weak var cellImage: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
@@ -25,7 +30,7 @@ final class ImagesListCell: UITableViewCell {
     }
     
     func setIsLiked(_ isLiked: Bool) {
-        let imageName = isLiked ? "favorites_active" : "favorites_no_active"
+        let imageName = isLiked ? Constants.likeActiveImage : Constants.likeInactiveImage
         likeButton.setImage(UIImage(named: imageName), for: .normal)
     }
     

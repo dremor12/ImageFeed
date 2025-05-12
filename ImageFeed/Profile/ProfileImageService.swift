@@ -6,6 +6,7 @@ final class ProfileImageService{
     private init() { }
     
     private(set) var avatarURL: String?
+    private let tokenStorage = OAuth2TokenStorage.shared
     
     private func makeImageRequest(with username: String, token: String) -> URLRequest? {
         guard let url = URL(string: "/users/" + username, relativeTo: Constants.defaultBaseURL) else {
@@ -19,7 +20,7 @@ final class ProfileImageService{
     
     
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void){
-        guard let token = OAuth2TokenStorage().token else {
+        guard let token = tokenStorage.token else {
             let error = URLError(.userAuthenticationRequired)
             print("[fetchProfileImageURL]: URLError - токен не найден")
             completion(.failure(error))

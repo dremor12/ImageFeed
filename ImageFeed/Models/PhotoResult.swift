@@ -1,6 +1,6 @@
 import Foundation
 
-struct PhotoResult: Codable {
+struct PhotoResult: Decodable {
     let id: String
     let createdAt: String?
     let width: Int
@@ -9,7 +9,7 @@ struct PhotoResult: Codable {
     let description: String?
     let urls: UrlsResult
 
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case id
         case createdAt = "created_at"
         case width

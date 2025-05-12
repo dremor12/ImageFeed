@@ -10,12 +10,13 @@ final class ImagesListService {
     private(set) var lastLoadedPage: Int?
     private let perPage = 10
     private var taskLike: URLSessionTask?
-    
+    private let tokenStorage = OAuth2TokenStorage.shared
+
     func fetchPhotosNextPage() {
         guard !isLoading else { return }
         isLoading = true
         
-        guard let token = OAuth2TokenStorage().token else {
+        guard let token = tokenStorage.token else {
             print("[fetchProfileImageURL]: URLError - токен не найден")
             isLoading = false
             return
@@ -63,7 +64,7 @@ final class ImagesListService {
         assert(Thread.isMainThread)
         taskLike?.cancel()
         
-        guard let token = OAuth2TokenStorage().token else {
+        guard let token = tokenStorage.token else {
             let error = URLError(.userAuthenticationRequired)
             completion(.failure(error))
             return
@@ -111,7 +112,7 @@ final class ImagesListService {
         guard let url = components?.url else { return nil }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get.rawValue
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
@@ -120,9 +121,9 @@ final class ImagesListService {
         var components = URLComponents(url: Constants.defaultBaseURL, resolvingAgainstBaseURL: true)
         components?.path = "/photos/\(id)/like"
         guard let url = components?.url else { return nil }
-        
+
         var request = URLRequest(url: url)
-        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.httpMethod = (isLike ? HTTPMethod.post : HTTPMethod.delete).rawValue
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
