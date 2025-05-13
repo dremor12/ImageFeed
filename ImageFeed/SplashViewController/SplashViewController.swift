@@ -11,7 +11,7 @@ final class SplashViewController: UIViewController {
     }()
     
     private let oauth2Service = OAuth2Service.shared
-    private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let oauth2TokenStorage = OAuth2TokenStorage.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,7 +98,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                     ProfileImageService.shared.fetchProfileImageURL(username: username) { _ in }
                 }
                 self.switchToTabBarController()
-            case .failure(let error):
+            case .failure:
                 self.showErrorAlert(message: "Не удалось войти в систему")
             }
         }
