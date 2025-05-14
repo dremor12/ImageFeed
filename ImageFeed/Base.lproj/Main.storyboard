@@ -21,6 +21,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcq-zG-xE1">
                                 <rect key="frame" x="16" y="680" width="361" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="Thq-4E-oEs"/>
                                 </constraints>
@@ -66,7 +67,7 @@
         <!--Web View View Controller-->
         <scene sceneID="1Cz-tR-iRv">
             <objects>
-                <viewController id="LIh-Ov-c8g" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="LIh-Ov-c8g" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vOP-jw-7Lm">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

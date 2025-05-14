@@ -41,6 +41,39 @@
                ReferencedContainer = "container:ImageFeed.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "361420882DD36E8700171940"
+               BuildableName = "WebViewTests.xctest"
+               BlueprintName = "WebViewTests"
+               ReferencedContainer = "container:ImageFeed.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "361420952DD36EF100171940"
+               BuildableName = "Image FeedTests.xctest"
+               BlueprintName = "Image FeedTests"
+               ReferencedContainer = "container:ImageFeed.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "363B1DF32DD518BE007FDE38"
+               BuildableName = "ImageFeedUITests.xctest"
+               BlueprintName = "ImageFeedUITests"
+               ReferencedContainer = "container:ImageFeed.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
