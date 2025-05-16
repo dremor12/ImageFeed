@@ -47,8 +47,10 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         let photo = photos[indexPath.row]
         
         view?.showProgress()
-        imagesService.changeLike(photoId: photo.id,
-                                 isLike: !photo.isLiked) { [weak self] result in
+        imagesService.changeLike(
+            photoId: photo.id,
+            isLike: !photo.isLiked
+        ) { [weak self] result in
             guard let self else { return }
             self.view?.hideProgress()
             

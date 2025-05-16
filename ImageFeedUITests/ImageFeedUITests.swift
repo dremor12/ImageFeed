@@ -4,9 +4,9 @@ class Image_FeedUITests: XCTestCase {
     private let app = XCUIApplication()
     
     private enum Constants {
-        static let email = "email@exemple.com"
+        static let email = "email"
         static let password = "password"
-        static let firstNameAndLastName = "Test Test"
+        static let firstNameAndLastName = "Name Name"
         static let username = "login"
     }
     

@@ -44,13 +44,17 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
         }
     }
     
-    func showImage(for cell: ImagesListCell,
-                   with url: URL,
-                   placeholder: UIImage?) {
+    func showImage(
+        for cell: ImagesListCell,
+        with url: URL,
+        placeholder: UIImage?
+    ) {
         cell.showAnimation()
         cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(with: url,
-                                   placeholder: placeholder) { _ in
+        cell.cellImage.kf.setImage(
+            with: url,
+            placeholder: placeholder
+        ) { _ in
             cell.hideAnimation()
         }
     }

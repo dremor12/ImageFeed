@@ -3,14 +3,13 @@ import XCTest
 
 final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
     weak var view: ImagesListViewControllerProtocol?
-    
+    var photosCount: Int { 0 }
+
     private(set) var viewDidLoadCalled = false
     
     func viewDidLoad() {
         viewDidLoadCalled = true
     }
-    
-    var photosCount: Int { 0 }
     func photo(at indexPath: IndexPath) -> Photo? { nil }
     func formattedDate(for photo: Photo) -> String? { nil }
     func willDisplayCell(at indexPath: IndexPath) {}
