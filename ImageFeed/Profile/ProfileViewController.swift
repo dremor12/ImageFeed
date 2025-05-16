@@ -1,7 +1,14 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol{
+    
+    var presenter: ProfilePresenterProtocol?
+    
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        presenter.view = self
+    }
     
     private lazy var nameLabel: UILabel = createLabel(
         text: "Екатерина Новикова",
@@ -26,7 +33,6 @@ final class ProfileViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = imageView.bounds.width / 2
         return imageView
     } ()
     
@@ -34,58 +40,31 @@ final class ProfileViewController: UIViewController {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "exit"), for: .normal)
-        button.addTarget(nil, action: #selector(didTapLogoutButton), for: .touchUpInside)
         return button
     }()
     
-    private let profileService = ProfileService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
-    private var animationLayers = Set<CALayer>()
+    private var shimmerLayers = Set<CALayer>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.ypBlack
-        
-        setupAvatarImageView()
-        setupProfileInfo()
-        setupLogoutButton()
-        
-        if let profile = profileService.profile {
-            updateProfileDetails(profile: profile)
-        } else {
-            addAnimation()
-        }
-        
-        profileImageServiceObserver = NotificationCenter
-            .default.addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
-        updateAvatar()
-    }
-
-    private func createLabel(text: String, font: UIFont, textColor: UIColor) -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = text
-        label.font = font
-        label.textColor = textColor
-        return label
+        configureAppearance()
+        presenter?.viewDidLoad()
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else {
-            return
-        }
-        
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        avatarImageView.layer.cornerRadius = avatarImageView.bounds.width / 2
+    }
+    
+    func show(profile: Profile) {
+        nameLabel.text = profile.name
+        loginNameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio ?? ""
+    }
+    
+    
+    func showAvatar(url: URL?) {
         avatarImageView.kf.setImage(
             with: url,
             placeholder: UIImage(named: "avatar"),
@@ -93,8 +72,34 @@ final class ProfileViewController: UIViewController {
                 .transition(.fade(0.3))
             ]
         )
+        hideSkeleton()
+    }
+    
+    func showSkeleton() {
+        shimmerLayers.formUnion(
+            ShimmerLayer.add(to: [avatarImageView],
+                             cornerRadius: avatarImageView.bounds.width / 2)
+        )
+        shimmerLayers.formUnion(
+            ShimmerLayer.add(to: [nameLabel, loginNameLabel, descriptionLabel])
+        )
+    }
+    
+    func hideSkeleton() {
+        ShimmerLayer.remove(layers: shimmerLayers)
+        shimmerLayers.removeAll()
+    }
+    
+    private func configureAppearance() {
+        view.backgroundColor = UIColor.ypBlack
         
-        removeAnimation()
+        setupAvatarImageView()
+        setupProfileInfo()
+        setupLogoutButton()
+        
+        logoutButton.addTarget(self,
+                                   action: #selector(logoutTapped),
+                                   for: .touchUpInside)
     }
     
     private func setupAvatarImageView() {
@@ -140,75 +145,27 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    private func updateProfileDetails(profile: Profile) {
-        nameLabel.text = profile.name
-        loginNameLabel.text = profile.loginName
-        descriptionLabel.text = profile.bio ?? ""
-        
-        removeAnimation()
-    }
     
     @objc
-    private func didTapLogoutButton() {
+    private func logoutTapped() {
         let alert = UIAlertController(
             title: "Пока-пока!",
             message: "Вы уверены, что хотите выйти?",
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "Нет", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Да", style: .destructive) { _ in
-            ProfileLogoutService.shared.logout()
+        alert.addAction(UIAlertAction(title: "Да", style: .destructive) { [weak self] _ in
+            self?.presenter?.didTapLogout()
         })
         present(alert, animated: true)
     }
-    
-    private func addAnimation() {
-        func makeGradient(for view: UIView,
-                          cornerRadius: CGFloat = 0) -> CAGradientLayer {
-            
-            let gradient = CAGradientLayer()
-            gradient.frame = view.bounds
-            gradient.colors = [
-                UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
-                UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
-                UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
-            ]
-            gradient.locations    = [0, 0.1, 0.3]
-            gradient.startPoint   = CGPoint(x: 0, y: 0.5)
-            gradient.endPoint     = CGPoint(x: 1, y: 0.5)
-            gradient.cornerRadius = cornerRadius
-            gradient.masksToBounds = true
-            
-            let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
-            gradientChangeAnimation.fromValue     = [0, 0.1, 0.3]
-            gradientChangeAnimation.toValue       = [0, 0.8, 1]
-            gradientChangeAnimation.duration      = 1.0
-            gradientChangeAnimation.repeatCount   = .infinity
-            gradient.add(gradientChangeAnimation, forKey: "shimmer")
-            
-            return gradient
-        }
-        
-        let avatarGradient = makeGradient(for: avatarImageView,
-                                          cornerRadius: avatarImageView.bounds.width / 2)
-        avatarImageView.layer.addSublayer(avatarGradient)
-        animationLayers.insert(avatarGradient)
-        
-        let nameGradient = makeGradient(for: nameLabel)
-        nameLabel.layer.addSublayer(nameGradient)
-        animationLayers.insert(nameGradient)
-        
-        let loginGradient = makeGradient(for: loginNameLabel)
-        loginNameLabel.layer.addSublayer(loginGradient)
-        animationLayers.insert(loginGradient)
-        
-        let descGradient = makeGradient(for: descriptionLabel)
-        descriptionLabel.layer.addSublayer(descGradient)
-        animationLayers.insert(descGradient)
-    }
-    
-    private func removeAnimation() {
-        animationLayers.forEach { $0.removeFromSuperlayer() }
-        animationLayers.removeAll()
+
+    private func createLabel(text: String, font: UIFont, textColor: UIColor) -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = text
+        label.font = font
+        label.textColor = textColor
+        return label
     }
 }
